@@ -25,7 +25,7 @@ jobs:
   # Check formatting
   fmt:
     name: Format
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -39,7 +39,7 @@ jobs:
   # a handful of cross-target jobs would otherwise catch the drift.
   lockfile:
     name: Lockfile
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -49,7 +49,7 @@ jobs:
   # Run clippy lints
   clippy:
     name: Clippy
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -66,7 +66,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-26.04, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -79,7 +79,7 @@ jobs:
   # WASM tests, against both `sqlite-wasm-rs` releases the crate accepts
   wasm:
     name: WASM Tests (sqlite-wasm-rs ${{ matrix.sqlite-wasm-rs }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     strategy:
       fail-fast: false
       matrix:
@@ -142,7 +142,7 @@ jobs:
   # Documentation
   docs:
     name: Documentation
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -155,7 +155,7 @@ jobs:
   # Miri checks for unsafe-heavy internal code paths
   miri:
     name: Miri (Core Unsafe Paths)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@nightly
@@ -172,7 +172,7 @@ jobs:
   # AddressSanitizer checks for unsafe-heavy internal code paths
   asan:
     name: ASan (Core Unsafe Paths)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     env:
       RUSTFLAGS: -Zsanitizer=address
       RUSTDOCFLAGS: -Zsanitizer=address
@@ -189,7 +189,7 @@ jobs:
   # Security audit
   audit:
     name: Security Audit
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -204,7 +204,7 @@ jobs:
   # Check that the crate builds for WASM target
   wasm-build:
     name: WASM Build Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -229,7 +229,7 @@ jobs:
             os: macos-latest
             target: aarch64-apple-ios-sim
           - name: Android (arm64)
-            os: ubuntu-latest
+            os: ubuntu-26.04
             target: aarch64-linux-android
             setup_android_ndk: true
     steps:
@@ -315,7 +315,7 @@ jobs:
   # Execute Android emulator tests on every CI trigger.
   android-test:
     name: Android Emulator Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -368,7 +368,7 @@ jobs:
   # Cross-target link/build check for aarch64 musl.
   edge-musl-link-check:
     name: Edge Cross Link Check (aarch64-unknown-linux-musl)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -391,7 +391,7 @@ jobs:
   # ARMv7 link check using host cross toolchain (avoids old glibc in cross images).
   armv7-link-check:
     name: ARMv7 Link Check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -435,7 +435,7 @@ jobs:
   # Coverage (optional, can be commented out if not needed)
   coverage:
     name: Code Coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -457,7 +457,7 @@ jobs:
   required:
     name: Required Checks
     if: ${{ always() }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs:
       - fmt
       - lockfile
