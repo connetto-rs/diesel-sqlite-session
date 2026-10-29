@@ -214,45 +214,29 @@ jobs:
       - name: Build for WASM
         run: cargo build --target wasm32-unknown-unknown -p diesel-sqlite-session
 
-  # Check that the crate compiles for mobile targets (without runtime execution)
+  # Check that the crate compiles for the Android target (without runtime execution)
   mobile-build:
-    name: Mobile Build Check (${{ matrix.name }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: iOS Device (arm64)
-            os: macos-latest
-            target: aarch64-apple-ios
-          - name: iOS Simulator (arm64)
-            os: macos-latest
-            target: aarch64-apple-ios-sim
-          - name: Android (arm64)
-            os: ubuntu-26.04
-            target: aarch64-linux-android
-            setup_android_ndk: true
+    name: Mobile Build Check (Android arm64)
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.target }}
+          targets: aarch64-linux-android
       - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2
 
       - name: Setup Android NDK
-        if: matrix.setup_android_ndk
         uses: nttld/setup-ndk@ed92fe6cadad69be94a966a7ee3271275e62f779 # v1
         with:
           ndk-version: r27c
 
       - name: Configure Android toolchain env
-        if: matrix.setup_android_ndk
         run: |
           echo "CC_aarch64_linux_android=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang" >> "$GITHUB_ENV"
           echo "AR_aarch64_linux_android=${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar" >> "$GITHUB_ENV"
 
       - name: Check mobile build
-        run: cargo check -p diesel-sqlite-session --lib --target ${{ matrix.target }}
+        run: cargo check -p diesel-sqlite-session --lib --target aarch64-linux-android
 
   # Execute iOS simulator tests on every CI trigger.
   ios:
