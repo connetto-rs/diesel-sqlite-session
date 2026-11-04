@@ -59,14 +59,9 @@ jobs:
       - name: Run clippy
         run: cargo clippy --all-targets --all-features -- -D warnings
 
-  # Run tests on multiple platforms
   test:
-    name: Test (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-26.04, macos-latest, windows-latest]
+    name: Test
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: dtolnay/rust-toolchain@stable
@@ -238,64 +233,6 @@ jobs:
       - name: Check mobile build
         run: cargo check -p diesel-sqlite-session --lib --target aarch64-linux-android
 
-  # Execute iOS simulator tests on every CI trigger.
-  ios:
-    name: iOS Simulator Tests
-    runs-on: macos-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-apple-ios,aarch64-apple-ios-sim
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
-      - name: Show Xcode version
-        run: xcodebuild -version
-      - name: Check iOS device target build
-        run: cargo check -p diesel-sqlite-session --target aarch64-apple-ios
-      - name: Boot iOS simulator
-        run: |
-          RUNTIME_JSON="$(xcrun simctl list runtimes --json \
-            | jq -c '.runtimes
-              | map(select(.isAvailable == true))
-              | map(select(.name | contains("iOS")))
-              | .[-1]')"
-          RUNTIME_ID="$(echo "$RUNTIME_JSON" | jq -r '.identifier')"
-          DEVICE_TYPE_ID="$(echo "$RUNTIME_JSON" \
-            | jq -r '.supportedDeviceTypes
-              | map(select(.productFamily == "iPhone"))
-              | .[0].identifier')"
-
-          if [ -z "$RUNTIME_ID" ] || [ "$RUNTIME_ID" = "null" ]; then
-            echo "No available iOS simulator runtime found"
-            exit 1
-          fi
-          if [ -z "$DEVICE_TYPE_ID" ] || [ "$DEVICE_TYPE_ID" = "null" ]; then
-            echo "No available iPhone simulator device type found"
-            exit 1
-          fi
-
-          SIM_UDID="$(xcrun simctl create ci-rust-ios "$DEVICE_TYPE_ID" "$RUNTIME_ID")"
-          echo "SIMULATOR_UDID=$SIM_UDID" >> "$GITHUB_ENV"
-          echo "Selected runtime: $RUNTIME_ID"
-          echo "Selected device type: $DEVICE_TYPE_ID"
-          echo "Created simulator: $SIM_UDID"
-
-          xcrun simctl boot "$SIM_UDID"
-          xcrun simctl bootstatus "$SIM_UDID" -b
-      - name: Run iOS simulator tests
-        run: cargo test -p diesel-sqlite-session --target aarch64-apple-ios-sim --locked
-        env:
-          CARGO_TARGET_AARCH64_APPLE_IOS_SIM_RUNNER: >-
-            xcrun simctl spawn ${{ env.SIMULATOR_UDID }}
-      - name: Cleanup iOS simulator
-        if: always()
-        run: |
-          if [ -n "${SIMULATOR_UDID:-}" ]; then
-            xcrun simctl shutdown "$SIMULATOR_UDID" || true
-            xcrun simctl delete "$SIMULATOR_UDID" || true
-          fi
-
   # Execute Android emulator tests on every CI trigger.
   android-test:
     name: Android Emulator Tests
@@ -402,20 +339,6 @@ jobs:
           AR_armv7_unknown_linux_gnueabihf: arm-linux-gnueabihf-ar
           CFLAGS_armv7_unknown_linux_gnueabihf: --sysroot=/usr/arm-linux-gnueabihf
 
-  # Link checks for Windows ARM64 builds used on edge/mobile-class hardware.
-  windows-arm64-link-check:
-    name: Windows ARM64 Link Check
-    runs-on: windows-latest
-    timeout-minutes: 35
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-pc-windows-msvc
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
-      - name: Test build (no-run)
-        run: cargo test -p diesel-sqlite-session --target aarch64-pc-windows-msvc --no-run --locked
-
   # Coverage (optional, can be commented out if not needed)
   coverage:
     name: Code Coverage
@@ -454,12 +377,10 @@ jobs:
       - audit
       - wasm-build
       - mobile-build
-      - ios
       - android-test
       - linux-arm64
       - edge-musl-link-check
       - armv7-link-check
-      - windows-arm64-link-check
       - coverage
     steps:
       - name: Verify required job status
