@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/connetto-rs/diesel-sqlite-session/graph/badge.svg)](https://codecov.io/gh/connetto-rs/diesel-sqlite-session)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-`SQLite` [session extension](https://sqlite.org/sessionintro.html) support for Diesel. Track row-level `INSERT`, `UPDATE`, and `DELETE` on a `SqliteConnection`, emit changesets or patchsets, and apply them elsewhere with a conflict callback. Attach tables by Diesel table type or by runtime name. A session tracks `main` unless you name another database, so an `ATTACH`ed file is reachable too. Runs on Linux, macOS, Windows, iOS, Android, and WebAssembly.
+`SQLite` [session extension](https://sqlite.org/sessionintro.html) support for Diesel. Track row-level `INSERT`, `UPDATE`, and `DELETE` on a `SqliteConnection`, emit changesets or patchsets, and apply them elsewhere with a conflict callback. Attach tables by Diesel table type or by runtime name. A session tracks `main` unless you name another database, so an `ATTACH`ed file is reachable too.
 
 > **Note**: Support depends on Diesel's `with_raw_connection` (added in [diesel#4966](https://github.com/diesel-rs/diesel/pull/4966)). Since this is merged but not yet released, use Diesel from the upstream git repo.
 
@@ -69,17 +69,7 @@ replica.apply_patchset(&patchset, |_| ConflictAction::Abort).unwrap();
 
 Full API reference and runnable examples for every method live on [docs.rs](https://docs.rs/diesel-sqlite-session), organized by module: pre-update hook, incremental blob I/O, changeset iterator, enhanced apply (`v2` and `v3`), transform helpers (`invert`, `concat`, `Changegroup`), session controls (`diff`, `set_table_filter`, size and rowid tracking), and the `Rebaser` for multi-master convergence. Every `SQLite` entry point that ships a streamed C sibling has a matching `_strm` method on the Rust side.
 
-## Platform Support
-
-| Platform | Backend | Status |
-|----------|---------|--------|
-| Linux/macOS/Windows | `libsqlite3-sys` (bundled) | Supported, tested in CI |
-| Linux ARM64 (native runner) | `libsqlite3-sys` (bundled) | Supported, runtime-tested in CI |
-| Linux edge targets (`musl`, `armv7`) | `libsqlite3-sys` (bundled) | Supported, cross-link/build checked in CI |
-| Windows ARM64 | `libsqlite3-sys` (bundled) | Supported, link/build checked in CI |
-| iOS (simulator + device build) | `libsqlite3-sys` (bundled) | Supported, simulator runtime-tested in CI |
-| Android (emulator + target builds) | `libsqlite3-sys` (bundled) | Supported, emulator runtime-tested in CI |
-| WebAssembly | `sqlite-wasm-rs` 0.5 or 0.6 | Supported, tested in CI against both |
+## WebAssembly
 
 On `wasm32-unknown-unknown` the crate enables no `sqlite-wasm-rs` feature. With 0.6 a browser application enables `wasm-bindgen` on its own `sqlite-wasm-rs` dependency or supplies the host hooks itself, while 0.5 always carries that glue.
 
