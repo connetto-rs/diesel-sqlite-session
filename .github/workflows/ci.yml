@@ -190,7 +190,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
       # `rustsec/audit-check` has no tagged release past its Node 20 build, so
       # the scan runs through the CLI directly.
-      - uses: taiki-e/install-action@5488ac5a951645ce95062214902ac4b6bc1a1037 # v2
+      - uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b # v2
         with:
           tool: cargo-audit
       - name: Run cargo audit
@@ -250,7 +250,7 @@ jobs:
         with:
           ndk-version: r27c
       - name: Install cargo-ndk
-        uses: taiki-e/install-action@5488ac5a951645ce95062214902ac4b6bc1a1037 # v2
+        uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b # v2
         with:
           tool: cargo-ndk
       - name: Enable KVM group perms
@@ -298,7 +298,7 @@ jobs:
           targets: aarch64-unknown-linux-musl
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
       - name: Install cross
-        uses: taiki-e/install-action@5488ac5a951645ce95062214902ac4b6bc1a1037 # v2
+        uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b # v2
         with:
           tool: cross
       - name: Cross test build (no-run, musl)
