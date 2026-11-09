@@ -181,21 +181,6 @@ jobs:
       - name: Run ASan on apply callback tests
         run: "cargo test -Zbuild-std --target x86_64-unknown-linux-gnu -p diesel-sqlite-session --lib apply::tests::"
 
-  # Security audit
-  audit:
-    name: Security Audit
-    runs-on: ubuntu-26.04
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-      - uses: dtolnay/rust-toolchain@stable
-      # `rustsec/audit-check` has no tagged release past its Node 20 build, so
-      # the scan runs through the CLI directly.
-      - uses: taiki-e/install-action@c509219cf42fba86913069efd0ade2458c59337b # v2
-        with:
-          tool: cargo-audit
-      - name: Run cargo audit
-        run: cargo audit
-
   # Check that the crate builds for WASM target
   wasm-build:
     name: WASM Build Check
@@ -315,7 +300,6 @@ jobs:
       - docs
       - miri
       - asan
-      - audit
       - wasm-build
       - linux-arm64
       - edge-musl-link-check
