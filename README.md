@@ -61,7 +61,7 @@ Full API reference and runnable examples for every method live on [docs.rs](http
 
 ## Benchmarks
 
-Native and WebAssembly performance numbers, a comparison against rusqlite, and instructions for reproducing the measurements are kept in [benches/BENCHMARKS.md](benches/BENCHMARKS.md).
+Native and WebAssembly performance numbers, a comparison against rusqlite, and instructions for reproducing the measurements are kept in [benches/BENCHMARKS.md](https://github.com/connetto-rs/diesel-sqlite-session/blob/main/benches/BENCHMARKS.md).
 
 ## Related Projects
 

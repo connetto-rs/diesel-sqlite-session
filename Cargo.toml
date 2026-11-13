@@ -10,7 +10,6 @@ rust-version = "1.88"
 license = "MIT"
 description = "SQLite session extension support for Diesel ORM - track changes and generate changesets/patchsets for replication"
 repository = "https://github.com/connetto-rs/diesel-sqlite-session"
-homepage = "https://github.com/connetto-rs/diesel-sqlite-session"
 documentation = "https://docs.rs/diesel-sqlite-session"
 readme = "README.md"
 keywords = ["diesel", "sqlite", "session", "changeset", "replication"]
