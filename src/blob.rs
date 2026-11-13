@@ -170,7 +170,7 @@ impl SqliteBlob {
                     c_column.as_ptr(),
                     rowid,
                     mode.to_flags(),
-                    &mut handle,
+                    &raw mut handle,
                 )
             })
         };

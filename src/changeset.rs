@@ -343,9 +343,9 @@ impl<'a> ChangesetReader<'a> {
         let rc = unsafe {
             let buf = bytes.as_ptr().cast_mut().cast::<c_void>();
             if invert {
-                sqlite3changeset_start_v2(&mut iter, len, buf, SQLITE_CHANGESETSTART_INVERT)
+                sqlite3changeset_start_v2(&raw mut iter, len, buf, SQLITE_CHANGESETSTART_INVERT)
             } else {
-                sqlite3changeset_start(&mut iter, len, buf)
+                sqlite3changeset_start(&raw mut iter, len, buf)
             }
         };
         if rc != SQLITE_OK {
@@ -402,14 +402,14 @@ impl<'a> ChangesetReader<'a> {
         let rc = unsafe {
             if invert {
                 sqlite3changeset_start_v2_strm(
-                    &mut iter,
+                    &raw mut iter,
                     Some(crate::streaming::read_trampoline::<R>),
                     ptr,
                     SQLITE_CHANGESETSTART_INVERT,
                 )
             } else {
                 sqlite3changeset_start_strm(
-                    &mut iter,
+                    &raw mut iter,
                     Some(crate::streaming::read_trampoline::<R>),
                     ptr,
                 )
@@ -496,10 +496,10 @@ impl<'a> ChangesetRow<'a> {
         let rc = unsafe {
             sqlite3changeset_op(
                 iter,
-                &mut table_ptr,
-                &mut n_col,
-                &mut op_code,
-                &mut indirect_int,
+                &raw mut table_ptr,
+                &raw mut n_col,
+                &raw mut op_code,
+                &raw mut indirect_int,
             )
         };
         if rc != SQLITE_OK {
@@ -521,7 +521,7 @@ impl<'a> ChangesetRow<'a> {
         let mut pk_ptr: *mut c_uchar = ptr::null_mut();
         let mut pk_n: c_int = 0;
         // SAFETY: iterator is live at a row position.
-        let rc = unsafe { sqlite3changeset_pk(iter, &mut pk_ptr, &mut pk_n) };
+        let rc = unsafe { sqlite3changeset_pk(iter, &raw mut pk_ptr, &raw mut pk_n) };
         if rc != SQLITE_OK {
             return Err(ChangesetError::PkFailed(SqliteErrorCode::from_error(rc)));
         }
@@ -647,7 +647,7 @@ impl<'a> ChangesetRow<'a> {
         let mut value: *mut sqlite3_value = ptr::null_mut();
         // SAFETY: `self.iter` is a live iterator at a row position and
         // `value` is a valid out-pointer.
-        let rc = unsafe { accessor(self.iter, idx, &mut value) };
+        let rc = unsafe { accessor(self.iter, idx, &raw mut value) };
         if rc != SQLITE_OK {
             return Err(ChangesetError::ValueReadFailed(
                 SqliteErrorCode::from_error(rc),

@@ -229,7 +229,7 @@ impl Session {
                     }
                 })?;
                 let mut session: *mut sqlite3_session = ptr::null_mut();
-                let rc = sqlite3session_create(raw, database.as_ptr(), &mut session);
+                let rc = sqlite3session_create(raw, database.as_ptr(), &raw mut session);
                 if rc != SQLITE_OK {
                     slot::release_session(raw);
                     return Err(SessionError::CreateFailed(SqliteErrorCode::from_error(rc)));
@@ -473,7 +473,7 @@ impl Session {
                 self.session,
                 c_from.as_ptr(),
                 c_table.as_ptr(),
-                &mut err_msg,
+                &raw mut err_msg,
             )
         };
         let message = if err_msg.is_null() {
@@ -623,7 +623,7 @@ impl Session {
 
         // SAFETY: `export_fn` is a SQLite session-export entry point taking
         // valid out-pointers to write size and buffer.
-        let rc = unsafe { export_fn(self.session, &mut size, &mut buffer) };
+        let rc = unsafe { export_fn(self.session, &raw mut size, &raw mut buffer) };
         if rc != SQLITE_OK {
             return Err(map_error(SqliteErrorCode::from_error(rc)));
         }

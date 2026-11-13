@@ -6,8 +6,6 @@
 
 `SQLite` [session extension](https://sqlite.org/sessionintro.html) support for Diesel. Track row-level `INSERT`, `UPDATE`, and `DELETE` on a `SqliteConnection`, emit changesets or patchsets, and apply them elsewhere with a conflict callback. Attach tables by Diesel table type or by runtime name. A session tracks `main` unless you name another database, so an `ATTACH`ed file is reachable too.
 
-> **Note**: Support depends on Diesel's `with_raw_connection` (added in [diesel#4966](https://github.com/diesel-rs/diesel/pull/4966)). Since this is merged but not yet released, use Diesel from the upstream git repo.
-
 ## Installation
 
 Add to your `Cargo.toml`:
@@ -15,7 +13,7 @@ Add to your `Cargo.toml`:
 ```toml
 [dependencies]
 diesel-sqlite-session = { git = "https://github.com/connetto-rs/diesel-sqlite-session" }
-diesel = { git = "https://github.com/diesel-rs/diesel", features = ["sqlite"] }
+diesel = { version = "2.4", features = ["sqlite"] }
 ```
 
 ## Quick Start

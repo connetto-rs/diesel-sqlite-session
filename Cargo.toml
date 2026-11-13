@@ -6,7 +6,7 @@ default-members = ["."]
 name = "diesel-sqlite-session"
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.78"
+rust-version = "1.88"
 license = "MIT"
 description = "SQLite session extension support for Diesel ORM - track changes and generate changesets/patchsets for replication"
 repository = "https://github.com/connetto-rs/diesel-sqlite-session"
@@ -21,28 +21,26 @@ include = [
     "README.md",
     "LICENSE",
 ]
-# Publishing blocked until Diesel ships a crates.io release that includes #4966.
-publish = false
 
 [dependencies]
-diesel = { git = "https://github.com/diesel-rs/diesel", features = ["sqlite"] }
+diesel = { version = "2.4", features = ["sqlite"] }
 thiserror = "2"
 
 # Native targets: use libsqlite3-sys
 [target.'cfg(not(all(target_family = "wasm", target_os = "unknown")))'.dependencies]
-# Ceiling matches diesel's `>=0.17.2, <0.40.0`. 0.38 is what makes
+# Ceiling matches diesel's `>=0.17.2, <0.41.0`. 0.38 is what makes
 # `libsqlite3-sys/bundled-sqlcipher` usable at all: its SQLCipher tree only
 # reaches `sqlite3changeset_apply_v3` (SQLite 3.51) at 0.38.
-libsqlite3-sys = { version = ">=0.37, <0.40", features = ["bundled", "session"] }
+libsqlite3-sys = { version = ">=0.37, <0.41", features = ["bundled", "session"] }
 
 # WASM targets: use sqlite-wasm-rs
 [target.'cfg(all(target_family = "wasm", target_os = "unknown"))'.dependencies]
 sqlite-wasm-rs = { version = ">=0.5, <0.7", default-features = false }
 
 [dev-dependencies]
-diesel = { git = "https://github.com/diesel-rs/diesel", features = ["sqlite"] }
+diesel = { version = "2.4", features = ["sqlite"] }
 criterion = { version = "0.8.2", features = ["html_reports"] }
-rusqlite = { version = "0.41", features = ["bundled", "session"] }
+rusqlite = { version = "0.42", features = ["bundled", "session"] }
 parking_lot = "0.12"
 
 [[bench]]

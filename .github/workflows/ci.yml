@@ -90,10 +90,13 @@ jobs:
 
       # 0.5 has no `wasm-bindgen` feature, and Cargo resolves the lockfile with
       # every workspace feature enabled, so no committed manifest accepts both
-      # releases. The test crates take 0.5 here instead.
+      # releases. The test crates take 0.5 here instead. The `rusqlite`
+      # dev-dependency, used only by the native comparison benchmark, requires
+      # 0.6.3 or later on wasm, so it leaves the graph too.
       - name: Move the wasm test crates to sqlite-wasm-rs 0.5
         if: matrix.sqlite-wasm-rs == '0.5'
         run: |
+          cargo remove --dev -p diesel-sqlite-session rusqlite
           cargo remove -p diesel-sqlite-session-wasm-tests sqlite-wasm-rs
           cargo remove -p diesel-sqlite-session-wasm-bench sqlite-wasm-rs
           cargo add -p diesel-sqlite-session-wasm-tests sqlite-wasm-rs@0.5
