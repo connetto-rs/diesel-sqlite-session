@@ -1,20 +1,12 @@
 # diesel-sqlite-session
 
+[![Crates.io](https://img.shields.io/crates/v/diesel-sqlite-session.svg)](https://crates.io/crates/diesel-sqlite-session)
+[![Docs.rs](https://docs.rs/diesel-sqlite-session/badge.svg)](https://docs.rs/diesel-sqlite-session)
 [![CI](https://github.com/connetto-rs/diesel-sqlite-session/actions/workflows/ci.yml/badge.svg)](https://github.com/connetto-rs/diesel-sqlite-session/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/connetto-rs/diesel-sqlite-session/graph/badge.svg)](https://codecov.io/gh/connetto-rs/diesel-sqlite-session)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 `SQLite` [session extension](https://sqlite.org/sessionintro.html) support for Diesel. Track row-level `INSERT`, `UPDATE`, and `DELETE` on a `SqliteConnection`, emit changesets or patchsets, and apply them elsewhere with a conflict callback. Attach tables by Diesel table type or by runtime name. A session tracks `main` unless you name another database, so an `ATTACH`ed file is reachable too.
-
-## Installation
-
-Add to your `Cargo.toml`:
-
-```toml
-[dependencies]
-diesel-sqlite-session = { git = "https://github.com/connetto-rs/diesel-sqlite-session" }
-diesel = { version = "2.4", features = ["sqlite"] }
-```
 
 ## Quick Start
 
