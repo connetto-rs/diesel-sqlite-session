@@ -175,7 +175,7 @@ impl<'a> ConflictInfo<'a> {
         let mut value: *mut sqlite3_value = ptr::null_mut();
         // SAFETY: `self.iter` is the live iterator SQLite handed us for the
         // duration of the conflict callback and `value` is a valid out-pointer.
-        let rc = unsafe { sqlite3changeset_conflict(self.iter, idx, &mut value) };
+        let rc = unsafe { sqlite3changeset_conflict(self.iter, idx, &raw mut value) };
         if rc != SQLITE_OK {
             return Err(ChangesetError::ValueReadFailed(
                 SqliteErrorCode::from_error(rc),
@@ -195,7 +195,7 @@ impl<'a> ConflictInfo<'a> {
     pub fn fk_conflicts_count(&self) -> Result<u32, ChangesetError> {
         let mut n: c_int = 0;
         // SAFETY: `self.iter` is the live iterator.
-        let rc = unsafe { sqlite3changeset_fk_conflicts(self.iter, &mut n) };
+        let rc = unsafe { sqlite3changeset_fk_conflicts(self.iter, &raw mut n) };
         if rc != SQLITE_OK {
             return Err(ChangesetError::ValueReadFailed(
                 SqliteErrorCode::from_error(rc),
@@ -225,7 +225,7 @@ impl<'a> ConflictInfo<'a> {
         })?;
         let mut value: *mut sqlite3_value = ptr::null_mut();
         // SAFETY: `self.iter` is the live iterator and `value` is a valid out-pointer.
-        let rc = unsafe { accessor(self.iter, idx, &mut value) };
+        let rc = unsafe { accessor(self.iter, idx, &raw mut value) };
         if rc != SQLITE_OK {
             return Err(ChangesetError::ValueReadFailed(
                 SqliteErrorCode::from_error(rc),
@@ -299,8 +299,8 @@ where
                 Some(filter_trampoline::<Filter, Conflict>),
                 Some(conflict_trampoline::<Filter, Conflict>),
                 ptr::addr_of_mut!(ctx).cast::<c_void>(),
-                &mut rebase_ptr,
-                &mut rebase_len,
+                &raw mut rebase_ptr,
+                &raw mut rebase_len,
                 flags.bits(),
             )
         })
@@ -376,8 +376,8 @@ where
                 Some(filter_trampoline::<Filter, Conflict>),
                 Some(conflict_trampoline::<Filter, Conflict>),
                 ptr::addr_of_mut!(ctx).cast::<c_void>(),
-                &mut rebase_ptr,
-                &mut rebase_len,
+                &raw mut rebase_ptr,
+                &raw mut rebase_len,
                 flags.bits(),
             )
         })
@@ -517,10 +517,10 @@ where
         let rc = unsafe {
             sqlite3changeset_op(
                 iter,
-                &mut table_ptr,
-                &mut n_col,
-                &mut op_code,
-                &mut indirect_int,
+                &raw mut table_ptr,
+                &raw mut n_col,
+                &raw mut op_code,
+                &raw mut indirect_int,
             )
         };
         if rc != SQLITE_OK {
@@ -600,8 +600,8 @@ where
                 Some(v3_filter_trampoline::<Filter, Conflict>),
                 Some(conflict_trampoline::<Filter, Conflict>),
                 ptr::addr_of_mut!(ctx).cast::<c_void>(),
-                &mut rebase_ptr,
-                &mut rebase_len,
+                &raw mut rebase_ptr,
+                &raw mut rebase_len,
                 flags.bits(),
             )
         })
@@ -648,8 +648,8 @@ where
                 Some(v3_filter_trampoline::<Filter, Conflict>),
                 Some(conflict_trampoline::<Filter, Conflict>),
                 ptr::addr_of_mut!(ctx).cast::<c_void>(),
-                &mut rebase_ptr,
-                &mut rebase_len,
+                &raw mut rebase_ptr,
+                &raw mut rebase_len,
                 flags.bits(),
             )
         })

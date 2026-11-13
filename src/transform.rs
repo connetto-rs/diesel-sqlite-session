@@ -80,8 +80,8 @@ pub fn invert_changeset(bytes: &[u8]) -> Result<Vec<u8>, ChangesetError> {
         sqlite3changeset_invert(
             len,
             bytes.as_ptr().cast::<c_void>(),
-            &mut out_len,
-            &mut out_ptr,
+            &raw mut out_len,
+            &raw mut out_ptr,
         )
     };
     if rc != SQLITE_OK {
@@ -126,8 +126,8 @@ pub fn concat_changesets(a: &[u8], b: &[u8]) -> Result<Vec<u8>, ChangesetError> 
             a.as_ptr().cast::<c_void>().cast_mut(),
             n_b,
             b.as_ptr().cast::<c_void>().cast_mut(),
-            &mut out_len,
-            &mut out_ptr,
+            &raw mut out_len,
+            &raw mut out_ptr,
         )
     };
     if rc != SQLITE_OK {
@@ -281,7 +281,7 @@ impl Changegroup {
         let mut ptr: *mut sqlite3_changegroup = ptr::null_mut();
         // SAFETY: `sqlite3changegroup_new` writes an owned allocation into
         // `ptr` and returns `SQLITE_OK` on success.
-        let rc = unsafe { sqlite3changegroup_new(&mut ptr) };
+        let rc = unsafe { sqlite3changegroup_new(&raw mut ptr) };
         if rc != SQLITE_OK {
             if !ptr.is_null() {
                 // SAFETY: hand back partial allocation for freeing.
@@ -436,7 +436,7 @@ impl Changegroup {
         let mut out_ptr: *mut c_void = ptr::null_mut();
         let mut out_len: c_int = 0;
         // SAFETY: `sqlite3changegroup_output` allocates via `sqlite3_malloc`.
-        let rc = unsafe { sqlite3changegroup_output(self.ptr, &mut out_len, &mut out_ptr) };
+        let rc = unsafe { sqlite3changegroup_output(self.ptr, &raw mut out_len, &raw mut out_ptr) };
         if rc != SQLITE_OK {
             if !out_ptr.is_null() {
                 // SAFETY: `sqlite3_malloc`-allocated buffer.
@@ -614,7 +614,7 @@ impl Rebaser {
     pub fn new() -> Result<Self, ChangesetError> {
         let mut ptr: *mut sqlite3_rebaser = ptr::null_mut();
         // SAFETY: `sqlite3rebaser_create` writes an owned allocation on OK.
-        let rc = unsafe { sqlite3rebaser_create(&mut ptr) };
+        let rc = unsafe { sqlite3rebaser_create(&raw mut ptr) };
         if rc != SQLITE_OK {
             if !ptr.is_null() {
                 // SAFETY: hand back partial allocation for freeing.
@@ -691,8 +691,8 @@ impl Rebaser {
                 self.ptr,
                 n_in,
                 changeset.as_ptr().cast::<c_void>(),
-                &mut out_len,
-                &mut out_ptr,
+                &raw mut out_len,
+                &raw mut out_ptr,
             )
         };
         if rc != SQLITE_OK {

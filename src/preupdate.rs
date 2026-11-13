@@ -317,7 +317,7 @@ impl<'a> PreUpdateEvent<'a> {
         let mut value: *mut sqlite3_value = ptr::null_mut();
         // SAFETY: `self.db` is the connection that fired the callback and
         // remains live for the callback frame.
-        let rc = unsafe { accessor(self.db, index, &mut value) };
+        let rc = unsafe { accessor(self.db, index, &raw mut value) };
         if rc != SQLITE_OK {
             return Err(PreUpdateError::Sqlite(SqliteErrorCode::from_error(rc)));
         }
